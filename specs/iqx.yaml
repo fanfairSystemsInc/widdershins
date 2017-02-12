@@ -1,0 +1,1634 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: iQX Amplify API Reference
+  termsOfService: https://documents.iqxamplify.com/termsofservice
+  contact:
+    email: development@iqxcorp.com
+  description: |-
+    Welcome to the iQX Amplify API reference. This is a live example of how you can use [iQX Amplify](http://app.iqxamplify.com/) to integrate your own e-commerce store or ticketing engine.
+
+    The iQX Amplify API is organized around the [REST](http://en.wikipedia.org/wiki/Representational_State_Transfer) mothodology, and it uses resource-oriented URLs, and common HTTP response codes to indicate API errors. All requests are authenticated using an `api-key` which can be obtained from your developer dashboard within iQX Amplify.
+# during dev, should point to your local machine
+host: localhost:10010
+# basePath prefixes all resource paths
+basePath: /V1
+tags:
+  - name: "Stores"
+    description: Store methods provide access to information and operations relating to the store.
+  - name: "Tickets"
+    description: Tickets methods provide access to information and operations relating to the tickets.
+  - name: "Events"
+    description: Events methods provide access to information and operations relating to the events.
+  - name: "Customers"
+    description: Customers methods provide access to information and operations relating to the customers.
+  - name: "Orders"
+    description: Orders methods provide access to information and operations relating to the orders.
+  - name: "Products"
+    description: Products methods provide access to information and operations relating to the products.
+  - name: "Event Tickets"
+    description: Event Tickets methods provide access to information and operations relating to the event tickets.
+  - name: "Webhook Events"
+    description: Webhook events are a way of letting you know when something has occured within your account .
+
+#
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /stores/:
+    x-swagger-router-controller: "Stores"
+    get:
+      description: "Retrieve all stores"
+      summary: "Retrieve all stores"
+      operationId: "FindStores"
+      produces:
+      - "application/json"
+      tags:
+      - Stores
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: "Store response"
+          examples:
+            application/json: |-
+              [{
+                "_key": "34546",
+                "type": "woocommerce",
+                "site_url": "http://192.168.100.75/wp-advantage",
+                "terms_of_service": "http://192.168.100.75/wp-advantage/?page_id=156",
+                "url": "192.168.100.75",
+                "has_integration": true,
+                "whitelist_email_on_purchase": true,
+                "whitelist_popup_on_purchase": true
+              }]
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Store"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: "Create or update a store"
+      summary: "Create or update a store"
+      operationId: "CreateOrUpdateStore"
+      parameters:
+        - name: store
+          in: body
+          description: Add or update store details
+          required: true
+          schema:
+            $ref: '#/definitions/Store'
+      produces:
+      - "application/json"
+      tags:
+      - Stores
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: "Store object response"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Store"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /stores/{id}:
+    x-swagger-router-controller: "Stores"
+    get:
+      description: "Retrieve a single store by id"
+      summary: "Retrieve a single store by id"
+      operationId: "FindStoresById"
+      produces:
+      - "application/json"
+      tags:
+      - Stores
+      security:
+        - api_key: []
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of the store to get"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Store object response"
+          examples:
+            application/json: |-
+              {
+                "_key": "34546",
+                "type": "woocommerce",
+                "site_url": "http://192.168.100.75/wp-advantage",
+                "terms_of_service": "http://192.168.100.75/wp-advantage/?page_id=156",
+                "url": "192.168.100.75",
+                "has_integration": true,
+                "whitelist_email_on_purchase": true,
+                "whitelist_popup_on_purchase": true
+              }
+          schema:
+            $ref: "#/definitions/Store"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /customers/:
+    x-swagger-router-controller: "Customers"
+    get:
+      description: "Retrieve all customers"
+      summary: "Retrieve all customers"
+      operationId: "FindCustomers"
+      produces:
+      - "application/json"
+      tags:
+      - Customers
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: "Customer object response"
+          examples:
+            application/json: |-
+              [{
+                "address1": "4563 1299 Seymour Street",
+                "address2": "",
+                "area_code": "778",
+                "city": "Vancouver",
+                "company": "",
+                "country": "CA",
+                "email": "john@me.com",
+                "first_name": "John",
+                "last_name": "Doe",
+                "modified_date": "2017-01-27T21:50:25.467Z",
+                "orders_count": 58,
+                "phone": "7789934763",
+                "province": "BC",
+                "ref_id": 6,
+                "signed_up_at": "2016-11-22T19:33:13+0000",
+                "time_zone_dst_offset": 0,
+                "time_zone_id": "America/Vancouver",
+                "time_zone_raw_offset": -28800,
+                "total_spent": 5489.69,
+                "user_id": "13528809",
+                "valid_phone_number": true,
+                "verified": false,
+                "zip": "V6B 2D3"
+              }]
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Customer"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: "Create or Update a customer"
+      summary: "Create or Update a customer"
+      operationId: "CreateOrUpdateCustomer"
+      parameters:
+        - name: customer
+          in: body
+          description: Add or update customer details
+          required: true
+          schema:
+            $ref: '#/definitions/Customer'
+      produces:
+      - "application/json"
+      tags:
+      - Customers
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: "Store response"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Customer"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /customers/{id}:
+    x-swagger-router-controller: "Customers"
+    get:
+      description: "Retrieve a single customer by id"
+      summary: "Retrieve a single customer by id"
+      operationId: "FindCustomersById"
+      produces:
+      - "application/json"
+      tags:
+      - Customers
+      security:
+        - api_key: []
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of the customer to get"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Customer object response"
+          examples:
+            application/json: |-
+              {
+                "address1": "4563 1299 Seymour Street",
+                "address2": "",
+                "area_code": "778",
+                "city": "Vancouver",
+                "company": "",
+                "country": "CA",
+                "email": "john@me.com",
+                "first_name": "John",
+                "last_name": "Doe",
+                "modified_date": "2017-01-27T21:50:25.467Z",
+                "orders_count": 58,
+                "phone": "7789934763",
+                "province": "BC",
+                "ref_id": 6,
+                "signed_up_at": "2016-11-22T19:33:13+0000",
+                "time_zone_dst_offset": 0,
+                "time_zone_id": "America/Vancouver",
+                "time_zone_raw_offset": -28800,
+                "total_spent": 5489.69,
+                "user_id": "13528809",
+                "valid_phone_number": true,
+                "verified": false,
+                "zip": "V6B 2D3"
+              }
+          schema:
+            $ref: "#/definitions/Customer"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /products/:
+    x-swagger-router-controller: "Products"
+    get:
+      description: "Retrieve all products"
+      summary: "Retrieve all products"
+      operationId: "FindProducts"
+      produces:
+      - "application/json"
+      tags:
+      - Products
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: "Product object response"
+          examples:
+            application/json: |-
+              [{
+                "categories": "Accessories",
+                "currency": "USD",
+                "handle": "http://192.168.100.75/wp-advantage/?product=wilson-tungsten-tuning-tape",
+                "image_source_url": "http://iqxstatic.s3-us-west-1.amazonaws.com/11740-DEFAULT-l.jpg",
+                "image_thubnail": "http://iqxstatic.s3-us-west-1.amazonaws.com/11740-DEFAULT-l-150x150.jpg",
+                "is_downloadable": false,
+                "is_virtual": false,
+                "keyword_locked": false,
+                "out_stock": false,
+                "price": "13.00",
+                "price_compare": "",
+                "product_tags": [
+                  "Wilson Tungsten Tuning Tape",
+                  "WTTT-4",
+                  "Accessories",
+                  "tennis",
+                  "tungsten",
+                  "tungsten tuning tape",
+                  "tuning tape",
+                  "wilson"
+                ],
+                "published_at": "2016-09-12T16:35:48+0000",
+                "ref_id": 72,
+                "sku": "WTTT-4",
+                "source": "woocommerce",
+                "tags": "tennis, tungsten, tungsten tuning tape, tuning tape, wilson",
+                "title": "Wilson Tungsten Tuning Tape",
+                "type": "simple",
+                "user_id": "13528809",
+                "variants": [
+                  {
+                    "attributes": [],
+                    "created": "2016-09-12T16:35:48+0000",
+                    "image": "http://192.168.100.75/wp-advantage/wp-content/uploads/2016/09/11740-DEFAULT-l.jpg",
+                    "in_stock": true,
+                    "inventory_management": "yes",
+                    "inventory_quantity": 320,
+                    "option1": "Wilson Tungsten Tuning Tape",
+                    "price": "13.00",
+                    "price_compare": null,
+                    "product_ref_id": 72,
+                    "ref_id": 72,
+                    "sku": "WTTT-4",
+                    "taxable": true,
+                    "title": "Wilson Tungsten Tuning Tape",
+                    "updated": "2016-09-12T16:35:48+0000",
+                    "visible": true,
+                    "weight": null
+                  }
+                ],
+                "vendor": "aliExpress"
+              }]
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Product"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: "Create or Update a product"
+      summary: "Create or Update a product"
+      operationId: "CreateOrUpdateProduct"
+      parameters:
+        - name: product
+          in: body
+          description: Add or update products details
+          required: true
+          schema:
+            $ref: '#/definitions/Product'
+      produces:
+      - "application/json"
+      tags:
+      - Products
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: "Store response"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Product"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /products/{id}:
+    x-swagger-router-controller: "Products"
+    get:
+      description: "Retrieve a single product by id"
+      summary: "Retrieve a single product by id"
+      operationId: "FindProductsById"
+      produces:
+      - "application/json"
+      tags:
+      - Products
+      security:
+        - api_key: []
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of the product to get"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Product object response"
+          examples:
+            application/json: |-
+              {
+                "categories": "Accessories",
+                "currency": "USD",
+                "handle": "http://192.168.100.75/wp-advantage/?product=wilson-tungsten-tuning-tape",
+                "image_source_url": "http://iqxstatic.s3-us-west-1.amazonaws.com/11740-DEFAULT-l.jpg",
+                "image_thubnail": "http://iqxstatic.s3-us-west-1.amazonaws.com/11740-DEFAULT-l-150x150.jpg",
+                "is_downloadable": false,
+                "is_virtual": false,
+                "keyword_locked": false,
+                "out_stock": false,
+                "price": "13.00",
+                "price_compare": "",
+                "product_tags": [
+                  "Wilson Tungsten Tuning Tape",
+                  "WTTT-4",
+                  "Accessories",
+                  "tennis",
+                  "tungsten",
+                  "tungsten tuning tape",
+                  "tuning tape",
+                  "wilson"
+                ],
+                "published_at": "2016-09-12T16:35:48+0000",
+                "ref_id": 72,
+                "sku": "WTTT-4",
+                "source": "woocommerce",
+                "tags": "tennis, tungsten, tungsten tuning tape, tuning tape, wilson",
+                "title": "Wilson Tungsten Tuning Tape",
+                "type": "simple",
+                "user_id": "13528809",
+                "variants": [
+                  {
+                    "attributes": [],
+                    "created": "2016-09-12T16:35:48+0000",
+                    "image": "http://192.168.100.75/wp-advantage/wp-content/uploads/2016/09/11740-DEFAULT-l.jpg",
+                    "in_stock": true,
+                    "inventory_management": "yes",
+                    "inventory_quantity": 320,
+                    "option1": "Wilson Tungsten Tuning Tape",
+                    "price": "13.00",
+                    "price_compare": null,
+                    "product_ref_id": 72,
+                    "ref_id": 72,
+                    "sku": "WTTT-4",
+                    "taxable": true,
+                    "title": "Wilson Tungsten Tuning Tape",
+                    "updated": "2016-09-12T16:35:48+0000",
+                    "visible": true,
+                    "weight": null
+                  }
+                ],
+                "vendor": "aliExpress"
+              }
+          schema:
+            $ref: "#/definitions/Product"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /orders/:
+    x-swagger-router-controller: "Orders"
+    get:
+      description: "Retrieve all orders"
+      summary: "Retrieve all orders"
+      operationId: "FindOrders"
+      produces:
+      - "application/json"
+      tags:
+      - Orders
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: "Order object response"
+          examples:
+            application/json: |-
+              [{
+                "cart_token": "",
+                "contact_ref_id": 1,
+                "email": "dfdavies@mail.com",
+                "financial_status": "completed",
+                "iqx_order": "",
+                "line_items": [
+                  {
+                    "fulfillable_quantity": 1,
+                    "price": "75.00",
+                    "product_ref_id": 74,
+                    "ref_id": 23,
+                    "sku": "NGPS-9X7",
+                    "variant_id": 93
+                  },
+                  {
+                    "fulfillable_quantity": 1,
+                    "price": "75.00",
+                    "product_ref_id": 74,
+                    "ref_id": 24,
+                    "sku": "NGPS-9X3",
+                    "variant_id": 97
+                  },
+                  {
+                    "fulfillable_quantity": 1,
+                    "price": "75.00",
+                    "product_ref_id": 74,
+                    "ref_id": 25,
+                    "sku": "NGPS-91",
+                    "variant_id": 79
+                  },
+                  {
+                    "fulfillable_quantity": 1,
+                    "price": "75.00",
+                    "product_ref_id": 74,
+                    "ref_id": 26,
+                    "sku": "NGPS-93",
+                    "variant_id": 77
+                  }
+                ],
+                "processed_at": "2016-09-12T17:56:08+0000",
+                "ref_id": 119,
+                "subtotal_price": "300",
+                "total_price": "312",
+                "total_shipping": "12",
+                "total_tax": "0",
+                "user_id": "13528809"
+              }]
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Order"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: "Create or Update a order"
+      summary: "Create or Update a order"
+      operationId: "CreateOrUpdateOrder"
+      parameters:
+        - name: order
+          in: body
+          description: Add or update orders details
+          required: true
+          schema:
+            $ref: '#/definitions/Order'
+      produces:
+      - "application/json"
+      tags:
+      - Orders
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: "Order response"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Order"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /orders/{id}:
+    x-swagger-router-controller: "Orders"
+    get:
+      description: "Retrieve a single order by id"
+      summary: "Retrieve a single order by id"
+      operationId: "FindOrdersById"
+      produces:
+      - "application/json"
+      tags:
+      - Orders
+      security:
+        - api_key: []
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of the order to get"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Order object response"
+          examples:
+            application/json: |-
+              {
+                "cart_token": "",
+                "contact_ref_id": 1,
+                "email": "dfdavies@mail.com",
+                "financial_status": "completed",
+                "iqx_order": "",
+                "line_items": [
+                  {
+                    "fulfillable_quantity": 1,
+                    "price": "75.00",
+                    "product_ref_id": 74,
+                    "ref_id": 23,
+                    "sku": "NGPS-9X7",
+                    "variant_id": 93
+                  },
+                  {
+                    "fulfillable_quantity": 1,
+                    "price": "75.00",
+                    "product_ref_id": 74,
+                    "ref_id": 24,
+                    "sku": "NGPS-9X3",
+                    "variant_id": 97
+                  },
+                  {
+                    "fulfillable_quantity": 1,
+                    "price": "75.00",
+                    "product_ref_id": 74,
+                    "ref_id": 25,
+                    "sku": "NGPS-91",
+                    "variant_id": 79
+                  },
+                  {
+                    "fulfillable_quantity": 1,
+                    "price": "75.00",
+                    "product_ref_id": 74,
+                    "ref_id": 26,
+                    "sku": "NGPS-93",
+                    "variant_id": 77
+                  }
+                ],
+                "processed_at": "2016-09-12T17:56:08+0000",
+                "ref_id": 119,
+                "subtotal_price": "300",
+                "total_price": "312",
+                "total_shipping": "12",
+                "total_tax": "0",
+                "user_id": "13528809"
+              }
+          schema:
+            $ref: "#/definitions/Order"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /events/:
+    x-swagger-router-controller: "Events"
+    get:
+      description: "Retrieve all events"
+      summary: "Retrieve all events"
+      operationId: "FindEvents"
+      produces:
+      - "application/json"
+      tags:
+      - Events
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: "Event object response"
+          examples:
+            application/json: |-
+              [{
+                "name" : "Live at Fortune Sound Club",
+                "description" : "Professor X is playing at Fortune",
+                "status" : "live",
+                "type" : "ticket",
+                "event_start_date" : "2017-02-09T05:30:00.000Z",
+                "event_end_date" : "2017-02-09T05:30:00.000Z",
+                "door_open_time" : "17:30",
+                "door_close_time" : "19:30",
+                "total_capacity" : "200",
+                "purchase_limit" : "10",
+                "event_url" : "http://events.com",
+                "currency" : "USD",
+                "tickets" : {
+
+                },
+                "time_zone" : "America/Vancouver",
+                "artistName" : "Professor X",
+                "venue" : {
+                    "name" : "",
+                    "address" : "",
+                    "city" : "",
+                    "province" : "",
+                    "country" : "",
+                    "zip" : ""
+                },
+                "scanner_code" : "1FWp",
+                "modified_date" : "2017-02-10T22:25:35.000Z",
+                "user_id" : "1234",
+              }]
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Event"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: "Create or Update a event"
+      summary: "Create or Update a event"
+      operationId: "CreateOrUpdateEvent"
+      parameters:
+        - name: event
+          in: body
+          description: Add or update events details
+          required: true
+          schema:
+            $ref: '#/definitions/Event'
+      produces:
+      - "application/json"
+      tags:
+      - Events
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: "Event response"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Event"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /events/{id}:
+    x-swagger-router-controller: "Events"
+    get:
+      description: "Retrieve a single event by id"
+      summary: "Retrieve a single event by id"
+      operationId: "FindEventsById"
+      produces:
+      - "application/json"
+      tags:
+      - Events
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of the event to get"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Event object response"
+          examples:
+            application/json: |-
+              {
+                "name" : "Live at Fortune Sound Club",
+                "description" : "Professor X is playing at Fortune",
+                "status" : "live",
+                "type" : "ticket",
+                "event_start_date" : "2017-02-09T05:30:00.000Z",
+                "event_end_date" : "2017-02-09T05:30:00.000Z",
+                "door_open_time" : "17:30",
+                "door_close_time" : "19:30",
+                "total_capacity" : "200",
+                "purchase_limit" : "10",
+                "event_url" : "http://events.com",
+                "currency" : "USD",
+                "tickets" : {
+
+                },
+                "time_zone" : "America/Vancouver",
+                "artistName" : "Professor X",
+                "venue" : {
+                    "name" : "",
+                    "address" : "",
+                    "city" : "",
+                    "province" : "",
+                    "country" : "",
+                    "zip" : ""
+                },
+                "scanner_code" : "1FWp",
+                "modified_date" : "2017-02-10T22:25:35.000Z",
+                "user_id" : "1234",
+              }
+          schema:
+            $ref: "#/definitions/Event"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /events/{id}/tickets/:
+    x-swagger-router-controller: "Event"
+    get:
+      description: "Retrieve all tickets for an event"
+      summary: "Retrieve all tickets for an event"
+      operationId: "FindEventTickets"
+      produces:
+      - "application/json"
+      tags:
+      - Event Tickets
+      security:
+        - api_key: []
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of the event to get"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Event Tickets object response"
+          examples:
+            application/json: |-
+              [{
+                "name" : "Early Bird",
+                "description" : "29.99",
+                "ticket_url" : "Active",
+                "order" : 0,
+                "price" : "",
+                "maximum_available" : "50",
+                "availability" : {
+                    "date_restrictions_status" : false,
+                    "date_restrictions_Start_date" : "2017-02-09T05:30:00.000Z",
+                    "date_restrictions_end_date" : "2017-02-09T05:30:00.000Z",
+                    "date_restrictions_Start_time" : "17:30",
+                    "date_restrictions_end_time" : "23:00",
+                },
+                "modified_date" : "2017-02-09T05:30:00.000Z",
+                "user_id" : "12345",
+               }]
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/EventTicket"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: "Create or Update a event ticket"
+      summary: "Create or Update a event ticket"
+      operationId: "CreateOrUpdateEventTicket"
+      parameters:
+        - name: event tickets
+          in: body
+          description: Add or update events details
+          required: true
+          schema:
+            $ref: '#/definitions/EventTicket'
+        - name: "id"
+          in: "path"
+          description: "ID of the event to get"
+          required: true
+          type: "string"
+      produces:
+      - "application/json"
+      tags:
+      - Event Tickets
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: "Event Ticket response"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/EventTicket"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /events/{id}/tickets/{tickets_id}/:
+    x-swagger-router-controller: "Events"
+    get:
+      description: "Retrieve a single event ticket by id"
+      summary: "Retrieve a single event ticket by id"
+      operationId: "FindEventTicketsById"
+      produces:
+      - "application/json"
+      tags:
+      - Event Tickets
+      security:
+        - api_key: []
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of the event to get"
+        required: true
+        type: "string"
+      - name: "tickets_id"
+        in: "path"
+        description: "ID of the event ticket to get"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Event Ticket object response"
+          examples:
+            application/json: |-
+              {
+                "name" : "Early Bird",
+                "description" : "29.99",
+                "ticket_url" : "Active",
+                "order" : 0,
+                "price" : "",
+                "maximum_available" : "50",
+                "availability" : {
+                    "date_restrictions_status" : false,
+                    "date_restrictions_Start_date" : "2017-02-09T05:30:00.000Z",
+                    "date_restrictions_end_date" : "2017-02-09T05:30:00.000Z",
+                    "date_restrictions_Start_time" : "17:30",
+                    "date_restrictions_end_time" : "23:00",
+                },
+                "modified_date" : "2017-02-09T05:30:00.000Z",
+                "user_id" : "12345",
+               }
+          schema:
+            $ref: "#/definitions/EventTicket"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /tickets/:
+    x-swagger-router-controller: "Tickets"
+    get:
+      description: "Retrieve all events"
+      summary: "Retrieve all events"
+      operationId: "FindTickets"
+      produces:
+      - "application/json"
+      tags:
+      - Tickets
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: "Event object response"
+          examples:
+            application/json: |-
+              [{
+                "ticket_number" : "sw23444345",
+                "card_number" : "4242",
+                "event_name" : "live",
+                "artist_name" : "Professor X",
+                "customer_ref_id" : "22222",
+                "venue" : {
+                    "name" : "",
+                    "address" : "",
+                    "city" : "",
+                    "province" : "",
+                    "country" : "",
+                    "zip" : ""
+                },
+                "currency" : "USD",
+                "location" : {
+                  "lat" : 49.2981406,
+                  "lng" : -123.102679
+                },
+                "ticket_category" : "VIP Upgrade",
+                "ticket_price" : "45.00",
+                "date_purchased" : "2017-02-09T05:30:00.000Z",
+                "door_open_time" : "17:30",
+                "currency" : "USD",
+                "subtotal_price" : "45.00",
+                "total_price" : "55.00",
+                "total_shipping" : "0",
+                "total_fees" : "0",
+                "total_tax" : "5.00",
+                "customer_email" : "john@me.com",
+                "modified_date" : "2017-02-10T22:25:35.000Z",
+                "user_id" : "1234",
+              }]
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Event"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: "Create or Update a ticket"
+      summary: "Create or Update a ticket"
+      operationId: "CreateOrUpdateTicket"
+      parameters:
+        - name: ticket
+          in: body
+          description: Add or update ticket details
+          required: true
+          schema:
+            $ref: '#/definitions/Ticket'
+      produces:
+      - "application/json"
+      tags:
+      - Tickets
+      security:
+        - api_key: []
+      responses:
+        200:
+          description: "Ticket response"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Ticket"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /tickets/{id}:
+    x-swagger-router-controller: "Tickets"
+    get:
+      description: "Retrieve a single ticket by id"
+      summary: "Retrieve a single ticket by id"
+      operationId: "FindTicketsById"
+      produces:
+      - "application/json"
+      tags:
+      - Tickets
+      security:
+        - api_key: []
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of the ticket to get"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Ticket object response"
+          examples:
+            application/json: |-
+              {
+                "ticket_number" : "sw23444345",
+                "card_number" : "4242",
+                "event_name" : "live",
+                "artist_name" : "Professor X",
+                "customer_ref_id" : "22222",
+                "venue" : {
+                    "name" : "",
+                    "address" : "",
+                    "city" : "",
+                    "province" : "",
+                    "country" : "",
+                    "zip" : ""
+                },
+                "currency" : "USD",
+                "location" : {
+                  "lat" : 49.2981406,
+                  "lng" : -123.102679
+                },
+                "ticket_category" : "VIP Upgrade",
+                "ticket_price" : "45.00",
+                "date_purchased" : "2017-02-09T05:30:00.000Z",
+                "door_open_time" : "17:30",
+                "currency" : "USD",
+                "subtotal_price" : "45.00",
+                "total_price" : "55.00",
+                "total_shipping" : "0",
+                "total_fees" : "0",
+                "total_tax" : "5.00",
+                "customer_email" : "john@me.com",
+                "modified_date" : "2017-02-10T22:25:35.000Z",
+                "user_id" : "1234",
+              }
+          schema:
+            $ref: "#/definitions/Ticket"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+securityDefinitions:
+  api_key:
+    type: apiKey
+    name: api_key
+    in: header
+definitions:
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
+        description: "The error message"
+  Store:
+    type: "object"
+    required:
+      - type
+    properties:
+      _key:
+        type: "string"
+        description: "Primary key"
+      type:
+        type: "string"
+        description: "The store type"
+      url:
+        type: "string"
+        description: "The sites domain"
+      business_name:
+        type: "string"
+        description: "Name of the business"
+      site_url:
+        type: "string"
+        description: "The URL of the store"
+      terms_of_service:
+        type: "string"
+        description: "The URL of the store's Terms of Service"
+      modified_date:
+        type: "string"
+        format: "date-time"
+        description: "Date last modified"
+      has_integration:
+        type: "boolean"
+        description: "Has been integrated (Will be deprecated as multiple integrations can now happen)"
+      whitelist_email_on_purchase:
+        type: "boolean"
+        description: "Send a whitelist email on the purchase"
+      whitelist_popup_on_purchase:
+        type: "boolean"
+        description: "Show the whitelist screen capture"
+  Customer:
+    type: "object"
+    properties:
+      _key:
+        type: "string"
+        description: "Primary key"
+      address1:
+        type: "string"
+        description: "Address Line 1"
+      address2:
+        type: "string"
+        description: "Address Line 2"
+      area_code:
+        type: "string"
+        description: "The Customer's Area Code"
+      city:
+        type: "string"
+        description: "The Customer's City"
+      company:
+        type: "string"
+        description: "The Customer's Company"
+      country:
+        type: "string"
+        description: "The Customer's Country"
+      email:
+        type: "string"
+        description: "The Customer's Email Address"
+      first_name:
+        type: "string"
+        description: "The Customer's First Name"
+      last_name:
+        type: "string"
+        description: "The Customer's Last Name"
+      modified_date:
+        type: "string"
+        format: "date-time"
+        description: "Date last modified"
+      orders_count:
+        type: "number"
+        description: "Total number of orders"
+      phone:
+        type: "string"
+        description: "The Customer's Phone Number"
+      province:
+        type: "string"
+        description: "The Customer's Province"
+      ref_id:
+        type: "string"
+        description: "The Customer's external reference Id"
+      signed_up_at:
+        type: "string"
+        format: "date-time"
+        description: "The date that the Customer signed up"
+      time_zone_dst_offset:
+        type: "number"
+        description: "The Customer's DST Timezone offset"
+      time_zone_id:
+        type: "string"
+        description: "The customer's Timezone"
+      time_zone_raw_offset:
+        type: "string"
+        description: "The Customer's Timezone offset"
+      total_spent:
+        type: "number"
+        description: "Customer's total spend to date"
+      user_id:
+        type: "string"
+        description: "Connected user id"
+      valid_phone_number:
+        type: "boolean"
+        description: "The Customer has a valid phone number"
+      verified:
+        type: "boolean"
+        description: "The Customer has been validated and whitelisted"
+      zip:
+        type: "string"
+        description: "The customer's Zipcode"
+  Product:
+    type: "object"
+    properties:
+      _key:
+        type: "string"
+        description: "Primary key"
+      categories:
+        type: "string"
+        description: "Comma seperated string of the product categories"
+      currency:
+        type: "string"
+        description: "The currency the product is listed in"
+      handle:
+        type: "string"
+        description: "The full URL to the product on the store"
+      image_source_url:
+        type: "string"
+        description: "The URL to the Product's image"
+      image_thubnail:
+        type: "string"
+        description: "The URL to the Product's thumbnail"
+      is_downloadable:
+        type: "boolean"
+        description: "If the product is downloadable"
+      is_virtual:
+        type: "boolean"
+        description: "If the Product is virtual"
+      keyword_locked:
+        type: "boolean"
+        description: "If the product has had a keyword set against it"
+      out_stock:
+        type: "boolean"
+        description: "If the product is out of stock"
+      price:
+        type: "number"
+        description: "The price of the product"
+      price_compare:
+        type: "number"
+        description: "The price compare for sale items"
+      product_tags:
+        type: "array"
+        items:
+          type: "string"
+          description: "Product tag name"
+        description: "Array of the product tags"
+      published_at:
+        type: "string"
+        format: "date-time"
+        description: "The date the product was published"
+      ref_id:
+        type: "string"
+        description: "The Products's external reference Id"
+      sku:
+        type: "string"
+        description: "Product's sku"
+      source:
+        type: "string"
+        description: "The Product's integration source"
+      tags:
+        type: "string"
+        description: "Comma delimited string of tags"
+      title:
+        type: "string"
+        description: "The product title"
+      type:
+        type: "string"
+        description: "If the product is a simple or variable type product"
+      user_id:
+        type: "string"
+        description: "Connected user id"
+      variants:
+        type: "array"
+        items:
+          type: "object"
+          description: "Product variants for a variable type product"
+          properties:
+            attributes:
+              type: "array"
+              items:
+                type: "object"
+                description: "Product variants for a variable type product"
+                properties:
+                  name:
+                    type: "string"
+                    description: "The name of the attribute"
+                  option:
+                    type: "string"
+                    description: "The option value of the attribute"
+                  slug:
+                    type: "string"
+                    description: "The slug of the attribute"
+            created:
+              type: "string"
+              format: "date-time"
+              description: "The date that the product variant was created"
+            image_source_url:
+              type: "string"
+              description: "The URL to the variants image"
+            in_stock:
+              type: "boolean"
+              description: "If the variant is currently in stock"
+            inventory_management:
+              type: "string"
+              description: "If inventory management is used for the variant"
+            inventory_quantity:
+              type: "string"
+              description: "Inventory quantity for the variant"
+            price:
+              type: "number"
+              description: "The price of the variant"
+            price_compare:
+              type: "number"
+              description: "The price compare for sale items"
+            product_ref_id:
+              type: "string"
+              description: "The Products's external reference Id"
+            ref_id:
+              type: "string"
+              description: "he variant's external reference Id"
+            sku:
+              type: "string"
+              description: "Variant's sku"
+            taxable:
+              type: "boolean"
+              description: "If the variant is taxable"
+            title:
+              type: "string"
+              description: "The title of tha variant"
+            updated:
+              type: "string"
+              format: "date-time"
+              description: "The date that the product variant was updated"
+            visible:
+              type: "boolean"
+              description: "If the variant is visible"
+            weight:
+              type: "number"
+              description: "The weight of the product Variant"
+        description: "Array of product variants"
+      vendor:
+        type: "string"
+        description: "The vendor connected to the Product"
+  Order:
+    type: "object"
+    properties:
+      _key:
+        type: "string"
+        description: "Primary key"
+      customer_ref_id:
+        type: "string"
+        description: "Customers reference id"
+      financial_status:
+        type: "string"
+        description: "Financial status of the order"
+      iqx_order:
+        type: "string"
+        description: "iqx internal order id"
+      line_items:
+        type: "array"
+        items:
+          type: "object"
+          description: "Product variants for a variable type product"
+          properties:
+            attributes:
+              type: "array"
+              items:
+                type: "object"
+                description: "Product variants for a variable type product"
+                properties:
+                  fulfillable_quantity:
+                    type: "number"
+                    description: "The qunatity of the line item"
+                  price:
+                    type: "number"
+                    description: "The price of the line item"
+                  product_ref_id:
+                    type: "number"
+                    description: "The Product's reference id"
+                  ref_id:
+                    type: "number"
+                    description: "The order's reference id"
+                  sku:
+                    type: "string"
+                    description: "Product's sku"
+        description: "The individual line items of the order"
+      processed_at:
+        type: "string"
+        format: "date-time"
+        description: "The Order was processed at"
+      ref_id:
+        type: "number"
+        description: "The Order reference number"
+      subtotal_price:
+        type: "number"
+        description: "The Order's sub total"
+      total_price:
+        type: "number"
+        description: "The Order's total"
+      total_shipping:
+        type: "number"
+        description: "The Order's shipping cost"
+      total_tax:
+        type: "number"
+        description: "The Order's tax amount"
+      user_id:
+        type: "string"
+        description: "Connected user id"
+  Event:
+    type: "object"
+    properties:
+      _key:
+        type: "string"
+        description: "Primary key"
+      name:
+        type: "string"
+        description: "Name of the event"
+      description:
+        type: "string"
+        description: "Description of the event"
+      status:
+        type: "string"
+        description: "Status of the event"
+      type:
+        type: "string"
+        description: "The type of event"
+      event_start_date:
+        type: "string"
+        format: "date-time"
+        description: "The date the event starts at"
+      event_end_date:
+        type: "string"
+        format: "date-time"
+        description: "The data the event ends at"
+      door_open_time:
+        type: "string"
+        format: "date-time"
+        description: "The time that the doors open"
+      door_close_time:
+        type: "string"
+        format: "date-time"
+        description: "The time that the doors close"
+      total_capacity:
+        type: "number"
+        description: "The total capacity for the event"
+      purchase_limit:
+        type: "number"
+        description: "The maximum number of ticket that can be purchased by a customer"
+      event_url:
+        type: "string"
+        description: "The URL to the event page"
+      currency:
+        type: "string"
+        description: "The currency that the event tickets are sold in"
+      tickets:
+        type: "array"
+        items:
+          $ref: "#/definitions/EventTicket"
+        description: "The individual line items of the order"
+      time_zone:
+        type: "string"
+        description: "The time zone that the event is in"
+      artist_name:
+        type: "string"
+        description: "The name of the artist"
+      venue:
+        type: "object"
+        description: "The venue details"
+        properties:
+          name:
+            type: "string"
+            description: "Name of the venue"
+          address:
+            type: "string"
+            description: "Address of the venue"
+          city:
+            type: "string"
+            description: "City of the venue"
+          province:
+            type: "string"
+            description: "Province/State of the venue"
+          country:
+            type: "string"
+            description: "Country of the venue"
+          zip:
+            type: "string"
+            description: "Zip code of the venue"
+      scanner_code:
+        type: "string"
+        description: "the scanner code to unlock the event"
+      modified_date:
+        type: "string"
+        format: "date-time"
+        description: "Date last modified"
+      user_id:
+        type: "string"
+        description: "Connected user id"
+  EventTicket:
+    type: "object"
+    properties:
+      _key:
+        type: "string"
+        description: "Primary key"
+      name:
+        type: "string"
+        description: "Name of the ticket"
+      description:
+        type: "string"
+        description: "Description of the ticket"
+      ticket_url:
+        type: "string"
+        description: "The URL to the ticket"
+      order:
+        type: "number"
+        description: "The order in which the ticket should be listed"
+      price:
+        type: "number"
+        description: "Price of the ticket"
+      maximum_available:
+        type: "number"
+        description: "The maximum number of ticket allocation"
+      availability:
+        type: "object"
+        description: "The availability if the ticket"
+        properties:
+          date_restrictions_status:
+            type: "boolean"
+            description: "the scanner code to unlock the event"
+          date_restrictions_Start_date:
+            type: "string"
+            description: "The qunatity of the line item"
+          date_restrictions_end_date:
+            type: "string"
+            description: "The price of the line item"
+          date_restrictions_Start_time:
+            type: "string"
+            description: "The Product's reference id"
+          date_restrictions_end_time:
+            type: "string"
+            description: "The Product's reference id"
+      modified_date:
+        type: "string"
+        format: "date-time"
+        description: "Date last modified"
+      user_id:
+        type: "string"
+        description: "Connected user id"
+  Ticket:
+    type: "object"
+    properties:
+      _key:
+        type: "string"
+        description: "Primary key"
+      ticket_number:
+        type: "string"
+        description: "Ticket reference number"
+      card_number:
+        type: "string"
+        description: "Last 4 digits of the credit card"
+      event_name:
+        type: "string"
+        description: "Name of the event"
+      artist_name:
+        type: "string"
+        description: "Name of the performing artist"
+      customer_ref_id:
+        type: "string"
+        description: "Customers reference id"
+      venue:
+        type: "object"
+        description: "The venue details"
+        properties:
+          name:
+            type: "string"
+            description: "Name of the venue"
+          address:
+            type: "string"
+            description: "Address of the venue"
+          city:
+            type: "string"
+            description: "City of the venue"
+          province:
+            type: "string"
+            description: "Province/State of the venue"
+          country:
+            type: "string"
+            description: "Country of the venue"
+          zip:
+            type: "string"
+            description: "Zip code of the venue"
+      location:
+        type: "object"
+        description: "The latitude and longitude of the event"
+        properties:
+          lat:
+            type: "string"
+            description: "The latitude of the venue"
+          lng:
+            type: "string"
+            description: "The longitude of the venue"
+      ticket_category:
+        type: "number"
+        description: "The category of the ticket"
+      ticket_price:
+        type: "number"
+        description: "The price of the ticket"
+      date_purchased:
+        type: "number"
+        description: "The date the ticket was purchased"
+      door_open_time:
+        type: "string"
+        format: "date-time"
+        description: "The time that the doors open"
+      currency:
+        type: "string"
+        description: "The currency that the tickets is sold in"
+      subtotal_price:
+        type: "number"
+        description: "The Tickets's sub total"
+      total_price:
+        type: "number"
+        description: "The Tickets's total"
+      total_shipping:
+        type: "number"
+        description: "The Tickets's shipping cost"
+      total_fees:
+        type: "number"
+        description: "The Tickets's fees cost"
+      total_tax:
+        type: "number"
+        description: "The Tickets's tax amount"
+      customer_email:
+        type: "string"
+        description: "The email address of the customer that purchased"
+      modified_date:
+        type: "string"
+        format: "date-time"
+        description: "Date last modified"
+      user_id:
+        type: "string"
+        description: "Connected user id"
